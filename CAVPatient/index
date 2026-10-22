@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <link rel="icon" type="image/png" href="logo.png?v=2">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patient Troubleshooting Guide</title>
+<meta name="google" content="notranslate">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  .pink-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: var(--pink);
+}
+:root{ --brand:#212529; --pink:#325083; --bg:#E8EDEE; --card:#fff; }
+html{
+  height:100%;
+  background-image: url(https://customer-0driaeelf9oznadghoes.s3.eu-west-2.amazonaws.com/site-customization/image/1782909186_1779116967_Background_6%20%282%29.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:'Poppins',sans-serif;
+  color:var(--brand);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:32px 0;
+}
+.card{position:relative;width:70%;max-width:860px;min-height:55vh;background:#fff;border-radius:20px;padding:60px 50px 90px;box-shadow:0 10px 32px rgba(8,10,82,0.10);display:flex;align-items:center;}
+.card.dynamic{height:auto;}
+.content{max-width:740px;margin:0 auto;text-align:center;}
+.answer .content{text-align:left;font-size:1.3rem;line-height:1.72;max-width:660px;}
+h1{font-size:1.74rem;margin:0 0 18px;font-weight:600;}
+.btns{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:50px;}
+.btn{background:var(--pink);color:#fff;border:none;padding:12px 18px;border-radius:10px;cursor:pointer;font-size:1rem;min-width:140px;}
+.logo-top{position:absolute;top:20px;right:20px;max-width:290px;}
+.footer-icons{position:absolute;bottom:20px;right:20px;display:flex;gap:20px;}
+.icon-btn{background:none;border:none;font-size:1.7rem;cursor:pointer;color:var(--brand);}
+a{color:var(--pink);text-decoration:underline;}
+.answer-text{max-width:660px;margin:0 auto;text-align:left;}
+.note-small{color:var(--pink);font-size:1.1rem;font-weight:400;display:block;margin-top:6px;}
+.lang-switcher{position:absolute;bottom:20px;left:20px;display:flex;align-items:center;background:#fff;padding:4px;border-radius:999px;box-shadow:0 4px 12px rgba(8,10,82,0.08);font-size:0.85rem;z-index:5;gap:2px;}
+.lang-pill{display:flex;align-items:center;gap:6px;border:none;background:transparent;cursor:pointer;font-family:'Poppins',sans-serif;font-size:0.85rem;padding:4px 10px;border-radius:999px;transition:background 0.15s ease,color 0.15s ease;}
+.lang-pill .lang-code{font-weight:600;padding:2px 6px;border-radius:999px;background:#F3F4FD;}
+.lang-pill.lang-active{background:#CFAB7A;color:#fff;}
+.lang-pill.lang-active .lang-code{background:rgba(255,255,255,0.16);color:#fff;}
+.card.answer .answer-text {
+  padding-top: 28px;
+}
+
+.card.dynamic.answer .answer-text {
+  padding-top: 40px;
+}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="lang-switcher" role="radiogroup" aria-label="Language">
+    <button class="lang-pill lang-active" id="lang-en" type="button" role="radio" aria-checked="true"><span class="lang-code">GB</span><span class="lang-name">English</span></button>
+    <button class="lang-pill" id="lang-cy" type="button" role="radio" aria-checked="false"><span class="lang-code">CY</span><span class="lang-name">Cymraeg</span></button>
+  </div>
+  <img src="https://d39o3fosqm9uio.cloudfront.net/accounts/165/files/3DQJD6X4BV903R6R2SE8WJJPG7/previews/huge.jpg?v=63855566070" class="logo-top" alt="SQOD Logo">
+  <div class="content" id="content"></div>
+  <div class="footer-icons">
+    <button class="icon-btn" title="Back" onclick="goBack()">&#8592;</button>
+    <button class="icon-btn" title="Restart" onclick="resetGuide()">&#8634;</button>
+  </div>
+</div>
+<script>
+let currentLang='en';
+let history=[];
+let current=null;
+const startId="welcome";
+const SLIDES={
+"welcome":{type:"q",textEn:`Welcome to a troubleshooting guide for NHS Wales Consult Patients having trouble joining their consultation.`,textCy:`Croeso i ganllaw datrys problemau i Blerai Ymgynghoriad GIG Cymru sydd yn cael trafferth ymuno â’u cynghoriad.`,buttons:[{labelEn:"Continue",labelCy:"Parhau",next:"q1"}]},
+"q1":{type:"q",textEn:`Are you using the correct secure waiting room link?`,textCy:`Ydych chi'n defnyddio'r ddolen ddiogel gywir i'r ystafell aros?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q2"},{labelEn:"Unsure",labelCy:"Ddim yn siŵr",next:"a1"}]},
+"a1":{type:"a",textEn:`It looks like you may be trying to join using the wrong link.<br><br>Please return to your <b>invite email or text message</b> and click the <b>secure consultation link</b> provided.<br> If you cannot locate this, please contact your consultation provider and request a new link be resent to you.`,textCy:`Mae'n ymddangos efallai eich bod yn ceisio ymuno drwy'r ddolen anghywir.<br><br>Ewch yn ôl at eich <b>e-bost neu neges destun gwahoddiad</b> a chliciwch ar y <b>ddolen ymgynghori ddiogel</b> a ddarparwyd.<br><br>Os na allwch ddod o hyd iddi, cysylltwch â'ch darparwr ymgynghori a gofynnwch am anfon dolen newydd atoch.`,nextBtn:true,next:"q2"},
+"q2":{type:"q",textEn:`Have you entered and confirmed your personal information?`,textCy:`Ydych chi wedi nodi a chadarnhau eich gwybodaeth bersonol?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q3"},{labelEn:"No",labelCy:"Na",next:"a2"}]},
+"a2":{type:"a",textEn:`Once you've opened your invite link, you will enter the waiting room landing page, <b>signposted clearly at the top of the page</b>.<br><br><b>Pressing continue</b> will bring you to the "Further Details" page, where you can enter any relevant personal information. You may need to scroll down to access the button, and any invalid fields will be highlighted in red.<br><br>You'll be given a final opportunity to review your personal information and have the option to run an equipment test before joining the waiting room via the highlighted button. Alternatively, you can change your answers via the "change your details" button directly beneath.`,textCy:`Unwaith y byddwch wedi agor eich dolen wahoddiad, byddwch yn cyrraedd tudalen lanio'r ystafell aros, <b>wedi'i nodi'n glir ar frig y dudalen</b>.<br><br>Bydd <b>pwyso "Parhau"</b> yn mynd â chi i'r dudalen "Further Details", lle gallwch nodi unrhyw wybodaeth bersonol berthnasol. Efallai bydd angen i chi sgrolio i lawr i gyrraedd y botwm, a bydd unrhyw feysydd annilys yn cael eu hamlygu mewn coch.<br><br>Cewch gyfle olaf i adolygu eich gwybodaeth bersonol a'r opsiwn i gynnal prawf offer cyn ymuno â'r ystafell aros drwy'r botwm wedi'i amlygu. Fel arall, gallwch newid eich atebion drwy'r botwm "change your details" yn union oddi tano.`,nextBtn:true,next:"q3",tall:true},
+"q3":{type:"q",textEn:`Have you entered the video consultation?`,textCy:`Ydych chi wedi mynd i mewn i'r ymgynghoriad fideo?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q4"},{labelEn:"No",labelCy:"Na",next:"a3"}]},
+"a3":{type:"a",textEn:`After confirming your details, you will progress on to a page with a green square confirming the name of the waiting area.<br><br>Once your provider has started the consultation, there will be a <b>short 15-20 second delay</b> before you enter the call.<br><br>If it is past the agreed start time and you are still on the waiting page, please contact your consultation provider directly.`,textCy:`Ar ôl cadarnhau eich manylion, byddwch yn symud ymlaen i dudalen gyda sgwâr gwyrdd sy'n cadarnhau enw'r ardal aros.<br><br>Unwaith y bydd eich darparwr wedi dechrau'r ymgynghoriad, bydd <b>oedi byr o 15–20 eiliad</b> cyn i chi fynd i mewn i'r alwad.<br><br>Os yw wedi mynd heibio'r amser cychwyn a gytunwyd ac rydych yn dal ar y dudalen aros, cysylltwch â'ch darparwr ymgynghori yn uniongyrchol.`,nextBtn:true,next:"q4",tall:true},
+"q4":{type:"q",textEn:`Have you granted permission for camera and microphone access?`,textCy:`Ydych chi wedi rhoi caniatâd i gael mynediad at y camera a'r meicroffon?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q5"},{labelEn:"No",labelCy:"Na",next:"a4"}]},
+"a4":{type:"a",textEn:`Your browser or device is currently blocking access to your camera or microphone.<br><br>To proceed, please enable <b>device permissions</b> within your browser:<br><span class="dash-block"><span class="dash">Look for the padlock or camera/microphone icon in your browser's address bar.</span><span class="dash">Select <b>'Allow'</b> when prompted.</span><span class="dash"><b>Refresh the page</b> and re-join the consultation.</span></span><br>If you are unsure how to change these settings, you can view our guide on how to do so, <a href="https://resources.sqod.co.uk/article/133-new-audio-or-video-device-challenges-whilst-joining-your-call" target="_blank" rel="noopener">here</a>.`,textCy:`Mae eich porwr neu'ch dyfais ar hyn o bryd yn rhwystro mynediad at eich camera neu'ch meicroffon.<br><br>I symud ymlaen, galluogwch <b>ganiatadau'r ddyfais</b> yn eich porwr:<br><span class="dash-block"><span class="dash">Chwiliwch am eicon y clo neu eicon y camera/meicroffon yn bar cyfeiriad eich porwr.</span><span class="dash">Dewiswch <b>'Caniatáu'</b> pan ofynnir i chi.</span><span class="dash"><b>Adnewyddwch y dudalen</b> ac ail-ymunwch â'r ymgynghoriad.</span></span><br>Os nad ydych yn siŵr sut i newid y gosodiadau hyn, gallwch weld ein canllaw ar sut i wneud hynny <a href="https://resources.sqod.co.uk/article/133-new-audio-or-video-device-challenges-whilst-joining-your-call" target="_blank" rel="noopener">yma</a>.`,nextBtn:true,next:"q5",tall:true},
+"q5":{type:"q",textEn:`Are your video and microphone icons turned on (not muted?)`,textCy:`A yw eiconau eich fideo a'ch meicroffon wedi'u troi ymlaen (heb eu tawelu)?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q6"},{labelEn:"Unsure",labelCy:"Ddim yn siŵr",next:"a5"}]},
+"a5":{type:"a",textEn:`Your microphone or camera may be turned off within the consultation window.<br><br>Please check the icons at the bottom of the screen, a <b>red or crossed-out symbol</b> indicates the feature is muted.<br><br><b>Click the icon</b> once to turn your microphone or camera back on. If the icon remains disabled, try leaving and re-joining the session.`,textCy:`Efallai bod eich meicroffon neu'ch camera wedi'i ddiffodd o fewn ffenestr yr ymgynghoriad.<br><br>Gwiriwch yr eiconau ar waelod y sgrin; mae <b>symbol coch neu symbol wedi'i groesi allan</b> yn dangos bod y nodwedd wedi'i thawelu.<br><br><b>Cliciwch ar yr eicon</b> unwaith i droi eich meicroffon neu'ch camera yn ôl ymlaen. Os yw'r eicon yn parhau'n anabl, rhowch gynnig ar adael ac ail-ymuno â'r sesiwn.`,nextBtn:true,next:"q6"},
+"q6":{type:"q",textEn:`Are you using a supported browser that is up-to-date?<br><span class="note-small"NHS Wales Consult supports Chrome or Chromium based browsers such as Google Chrome, Microsoft Edge, Safari, Firefox and Brave.</span>`,textCy:`Ydych chi'n defnyddio porwr a gefnogir sydd wedi'i ddiweddaru?<br><span class="note-small">Ymgynghoriad GIG Cymru yn cefnogi porwyr Chrome neu borwyr sy'n seiliedig ar Chromium fel Google Chrome, Microsoft Edge, Safari, Firefox a Brave.</span>`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q7"},{labelEn:"No",labelCy:"Na",next:"a6"}]},
+"a6":{type:"a",textEn:`An outdated or unsupported browser/app may prevent your consultation from starting.<br><br> Please <b>update to the latest version</b> of a supported browser (Google Chrome, Microsoft Edge, or Safari). Or alternatively, attempt to join your consultation on a different browsing system.<br><br> If you are using a <b>mobile device</b>, ensure your operating system and app are fully updated. After updating, please restart your device and re-join the consultation.`,textCy:`Gall porwr neu ap sydd wedi dyddio neu nad yw'n cael ei gefnogi atal eich ymgynghoriad rhag dechrau.<br><br>Diweddarwch i'r <b>fersiwn ddiweddaraf</b> o borwr a gefnogir (Google Chrome, Microsoft Edge, neu Safari). Fel arall, rhowch gynnig ar ymuno â'ch ymgynghoriad ar system bori wahanol.<br><br>Os ydych yn defnyddio <b>dyfais symudol</b>, gwnewch yn siŵr bod eich system weithredu a'ch ap wedi'u diweddaru'n llawn. Ar ôl diweddaru, ailgychwynnwch eich dyfais ac ail-ymunwch â'r ymgynghoriad.`,nextBtn:true,next:"q7",tall:true},
+"q7":{type:"q",textEn:`Have you tried refreshing the page and reopening the invite link in incognito/a private browsing tab?`,textCy:`Ydych chi wedi ceisio adnewyddu'r dudalen ac ailagor y ddolen wahoddiad mewn tab preifat neu tab anhysbys?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q8"},{labelEn:"No",labelCy:"Na",next:"a7"}]},
+"a7":{type:"a",textEn:`Please refresh your browser and attempt to re-join the consultation.<br><br> If the issue continues, try opening the consultation link in an <b>incognito or private browsing window</b>. This disables extensions and cached settings that may interfere with video calls.<br><br> We have a step-by-step guide on how to do this <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">here</a>.`,textCy:`Adnewyddwch eich porwr a rhowch gynnig ar ail-ymuno â'r ymgynghoriad.<br><br>Os yw'r broblem yn parhau, rhowch gynnig ar agor y ddolen ymgynghori mewn <b>ffenestr anhysbys neu borwr preifat</b>. Mae hyn yn analluogi estyniadau a gosodiadau storfa (cache) a allai ymyrryd â galwadau fideo.<br><br>Mae gennym ganllaw cam wrth gam ar sut i wneud hyn <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">yma</a>.`,nextBtn:true,next:"q8",tall:true},
+"q8":{type:"q",textEn:`Have you cleared your cache (browser history)?`,textCy:`Ydych chi wedi clirio eich storfa (cache) (hanes y porwr)?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q9"},{labelEn:"No",labelCy:"Na",next:"a8"}]},
+"a8":{type:"a",textEn:`Clearing your browser's cache and cookies often resolves loading and login issues by removing outdated data.<br><br> To clear cache: <br> 1. Open your browser settings (usually found under 'History' or 'Privacy'). <br> 2. Select <b>Clear browsing data</b>. <br> 3. Choose to clear Cache and Cookies. <br> 4. Close and reopen your browser. <br> 5. Return to your consultation link and try again. <br><br> For detailed instructions, we have a step-by-step guide on how to do this <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">here</a>.`,textCy:`Mae clirio storfa (cache) a chwcis eich porwr yn aml yn datrys problemau llwytho a mewngofnodi drwy gael gwared ar ddata sydd wedi dyddio.<br><br>I glirio'r storfa: <br> 1. Agorwch osodiadau eich porwr (fel arfer o dan 'History' neu 'Privacy'). <br> 2. Dewiswch <b>Clear browsing data</b>. <br> 3. Dewiswch glirio Cache a Cookies. <br> 4. Caewch ac ailagorwch eich porwr. <br> 5. Dychwelwch at eich dolen ymgynghori a rhowch gynnig arall arni. <br><br>I gael cyfarwyddiadau manwl, mae gennym ganllaw cam wrth gam ar sut i wneud hyn <a href="https://resources.sqod.co.uk/article/135-new-browser-and-cache-help" target="_blank" rel="noopener">yma</a>.`,nextBtn:true,next:"q9",tall:true},
+"q9":{type:"q",textEn:`Are you on a stable internet connection? (e.g., wired or strong Wi-FI)`,textCy:`Ydych chi ar gysylltiad rhyngrwyd sefydlog? (e.e., cysylltiad gwifredig neu Wi-Fi cryf)`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"q10"},{labelEn:"No",labelCy:"Na",next:"a9"}]},
+"a9":{type:"a",textEn:`<span>A weak or unstable internet connection can interrupt your consultation. Please try the following to boost your connectivity:</span><br><br><span class="dash">Move closer to your Wi-Fi router or connect with a network cable if possible.</span><span class="dash">Disconnect other devices from the network temporarily.</span><span class="dash">If you are using mobile data, ensure you have a strong signal. You may have to move location to gain better signal, or switch to a Wi-Fi connection.</span><br> For the best experience, a minimum of <b>2 Mbps</b> upload and download speed is recommended. <br><br>You can test your internet speed for free at <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net.</a>`,textCy:`<span>Gall cysylltiad rhyngrwyd gwan neu ansefydlog darfu ar eich ymgynghoriad. Rhowch gynnig ar y canlynol i wella eich cysylltedd:</span><br><br><span class="dash">Symudwch yn nes at eich llwybrydd Wi-Fi neu cysylltwch â chebl rhwydwaith os yn bosibl.</span><span class="dash">Datgysylltwch ddyfeisiau eraill o'r rhwydwaith dros dro.</span><span class="dash">Os ydych yn defnyddio data symudol, gwnewch yn siŵr bod gennych signal cryf. Efallai bydd angen symud i leoliad gwahanol i gael signal gwell, neu newid i gysylltiad Wi-Fi.</span><br>Er mwyn cael y profiad gorau, argymhellir cyflymder llwytho i fyny ac i lawr o leiaf <b>2 Mbps</b>.<br><br>Gallwch brofi eich cyflymder rhyngrwyd am ddim ar <a href="https://speedtest.net" target="_blank" rel="noopener">speedtest.net.</a>`,nextBtn:true,next:"q10",tall:true},
+"q10":{type:"q",textEn:`Do you have other tabs or applications open?`,textCy:`Oes gennych dabiau neu raglenni eraill ar agor?`,buttons:[{labelEn:"No",labelCy:"Na",next:"q11"},{labelEn:"Yes",labelCy:"Oes",next:"a10"}]},
+"a10":{type:"a",textEn:`Other apps or browser tabs may be using up your internet connection, camera, microphone, or system memory, which can slow down or interrupt your video consultation.<br><br> Please <b>close any unnecessary tabs</b>, especially those running video, music, or large downloads (e.g., YouTube, Netflix, Teams, Zoom, or file-sharing sites). <br><br> Also, close other applications that may be using your camera or microphone, such as Skype or FaceTime. <br> By freeing up resources, your device can give priority to your video consultation, resulting in a clearer picture and better sound quality.`,textCy:`Gall apiau eraill neu dabiau porwr fod yn defnyddio eich cysylltiad rhyngrwyd, camera, meicroffon neu gof y system, a all arafu neu darfu ar eich ymgynghoriad fideo.<br><br>Caewch unrhyw <b>dabiau diangen</b>, yn enwedig y rhai sy'n rhedeg fideo, cerddoriaeth neu lawrlwythiadau mawr (e.e., YouTube, Netflix, Teams, Zoom, neu safleoedd rhannu ffeiliau).<br><br>Hefyd, caewch raglenni eraill a allai fod yn defnyddio eich camera neu'ch meicroffon, megis Skype neu FaceTime.<br><br>Drwy ryddhau adnoddau, gall eich dyfais roi blaenoriaeth i'ch ymgynghoriad fideo, gan arwain at ddelwedd gliriach ac ansawdd sain gwell.`,nextBtn:true,next:"q11",tall:true},
+"q11":{type:"q",textEn:`Can your device play other video content (YouTube, etc.)?`,textCy:`A all eich dyfais chwarae cynnwys fideo arall (YouTube ac ati)?`,buttons:[{labelEn:"Yes",labelCy:"Ie",next:"final"},{labelEn:"No",labelCy:"Na",next:"a11"}]},
+"a11":{type:"a",textEn:`If your device cannot play standard video content, the issue is likely with your local video playback setup rather than the consultation platform.<br> <span class="dash-block" style="margin-top:4px;"> <span class="dash">Test your camera and audio in another app. Open a video app such as Zoom, Teams, Skype, or FaceTime and check if your camera and microphone work correctly.</span> <span class="dash">Update your video and audio drivers (for computers). Outdated drivers can prevent your camera or microphone from working.</span> <span class="dash">Restart your device and try again.</span> </span> <br> <b>If video playback still fails</b>, please switch to another device.`,textCy:`Os na all eich dyfais chwarae cynnwys fideo safonol, mae'n debygol mai'r broblem yw gosodiad chwarae fideo lleol eich dyfais yn hytrach na'r platfform ymgynghori.<br> <span class="dash-block" style="margin-top:4px;"> <span class="dash">Profwch eich camera a'ch sain mewn ap arall. Agorwch ap fideo fel Zoom, Teams, Skype, neu FaceTime a gwiriwch a yw eich camera a'ch meicroffon yn gweithio'n iawn.</span> <span class="dash">Diweddarwch eich gyrrwyr fideo a sain (ar gyfer cyfrifiaduron). Gall gyrrwyr sydd wedi dyddio atal eich camera neu'ch meicroffon rhag gweithio.</span> <span class="dash">Ailgychwynnwch eich dyfais a rhowch gynnig arall arni.</span> </span> <br> <b>Os yw chwarae fideo yn dal i fethu</b>, newidiwch i ddyfais arall.`,nextBtn:true,next:"final",tall:true},
+"final":{type:"a",textEn:`<div class="pink-title">Still having issues?</div>If you're still experiencing problems after following the previous steps, please try the suggestions below before contacting your consultation provider at NHS Wales Consult: <br> <span class="dash-block"> <span class="dash"><b>Try an alternative device:</b> If you are using a computer, switch to a tablet or smartphone, or vice versa. This helps identify whether the issue is related to the device itself (e.g., outdated operating system or local settings).</span><br> <span class="dash"><b>Use a different browser:</b> We recommend trying the most up-to-date versions of Google Chrome, Microsoft Edge, or Safari. If one browser does not connect successfully, switching often resolves compatibility problems.</span><br> <span class="dash"><b>Check your internet connection:</b> Video consultations require a stable connection. Run a quick speed test (for example, using speedtest.net) and ensure you have at least 2 Mbps upload and download speeds. If the connection is unstable, try moving closer to your router, restarting your router, or switching to a wired connection where available.</span><br> <span class="dash"><b>Review security software and settings:</b> Virtual Private Networks (VPNs), antivirus software, or firewall restrictions can sometimes block access to video or audio streams. Where possible, disable these temporarily or adjust the settings to allow your video consultations to run.</span> </span>`,textCy:`<div class="pink-title">Dal yn cael anawsterau?</div>Os ydych yn dal i brofi problemau ar ôl dilyn y camau blaenorol, rhowch gynnig ar yr awgrymiadau isod cyn cysylltu â'ch darparwr ymgynghori yn Ymgynghoriad GIG Cymru: <br> <span class="dash-block"> <span class="dash"><b>Rhowch gynnig ar ddyfais arall:</b> Os ydych yn defnyddio cyfrifiadur, newidiwch i dabled neu ffôn clyfar, neu i'r gwrthwyneb. Mae hyn yn helpu i nodi a yw'r broblem yn gysylltiedig â'r ddyfais ei hun (e.e., system weithredu sydd wedi dyddio neu osodiadau lleol).</span><br> <span class="dash"><b>Defnyddiwch borwr gwahanol:</b> Rydym yn argymell rhoi cynnig ar fersiynau mwyaf diweddar Google Chrome, Microsoft Edge, neu Safari. Os nad yw un porwr yn cysylltu'n llwyddiannus, mae newid porwr yn aml yn datrys problemau cydnawsedd.</span><br> <span class="dash"><b>Gwiriwch eich cysylltiad rhyngrwyd:</b> Mae ymgynghoriadau fideo yn gofyn am gysylltiad sefydlog. Cynhaliwch brawf cyflymder cyflym (er enghraifft, gan ddefnyddio speedtest.net) a gwnewch yn siŵr bod gennych o leiaf 2 Mbps ar gyfer llwytho i fyny ac i lawr. Os yw'r cysylltiad yn ansefydlog, ceisiwch symud yn nes at eich llwybrydd, ailgychwyn y llwybrydd, neu newid i gysylltiad gwifredig lle bo hynny ar gael.</span><br> <span class="dash"><b>Adolygwch feddalwedd a gosodiadau diogelwch:</b> Gall Rhwydweithiau Preifat Rhithwir (VPNs), meddalwedd gwrthfeirws, neu gyfyngiadau mur gwarchod weithiau rwystro mynediad at ffrydiau fideo neu sain. Lle bo'n bosibl, analluogwch y rhain dros dro neu addaswch y gosodiadau i ganiatáu i'ch ymgynghoriadau fideo redeg.</span> </span>`,final:true,long:true}
+};
+function stripOuterQuotes(s){
+  if(!s)return s;
+  const t=s.trim();
+  if((t.startsWith('"')&&t.endsWith('"'))||(t.startsWith('“')&&t.endsWith('”')))return t.slice(1,-1);
+  return s;
+}
+function formatText(raw){
+  let t=raw||"";
+  t=stripOuterQuotes(t);
+  t=t.replace(/\n/g,"<br>");
+  return t;
+}
+function renderSlide(id){
+  current=id;
+  const slide=SLIDES[id];
+  const content=document.getElementById("content");
+  const card=document.getElementById("card");
+  if(!slide){content.innerHTML="<div style='text-align:left'>Slide not found: "+id+"</div>";return;}
+  card.className="card";
+  if(slide.type==="q"){card.classList.add("question");}
+  else{card.classList.add("answer","dynamic");}
+  const textRaw=currentLang==='cy'?(slide.textCy||slide.textEn||""):(slide.textEn||slide.textCy||"");
+  if(slide.type==="q"){
+    const qtext=formatText(textRaw||"");
+    const btns=(slide.buttons||[]).map(b=>{
+      const label=currentLang==='cy'?(b.labelCy||b.labelEn||b.label):(b.labelEn||b.labelCy||b.label);
+      return `<button class="btn" onclick="goTo('${b.next}')">${label}</button>`;
+    }).join("");
+    content.innerHTML=`<h1>${qtext}</h1><div class="btns">${btns}</div>`;
+  }else{
+    const html=formatText(textRaw||"");
+    if(slide.final){
+      content.innerHTML=`<div class="answer-text">${html}</div>`;
+    }else if(slide.nextBtn){
+      const next=currentLang==='cy'?"Nesaf":"Next";
+      content.innerHTML=`<div class="answer-text">${html}<div class="btns"><button class="btn" onclick="goTo('${slide.next}')">${next}</button></div></div>`;
+    }else{
+      content.innerHTML=`<div class="answer-text">${html}</div>`;
+    }
+  }
+}
+function goTo(id){history.push(current);renderSlide(id);}
+function goBack(){if(history.length){renderSlide(history.pop());}}
+function resetGuide(){history=[];renderSlide(startId);}
+function updateLangUI(){
+  const enBtn=document.getElementById('lang-en');
+  const cyBtn=document.getElementById('lang-cy');
+  if(currentLang==='cy'){
+    enBtn.classList.remove('lang-active');enBtn.setAttribute('aria-checked','false');
+    cyBtn.classList.add('lang-active');cyBtn.setAttribute('aria-checked','true');
+  }else{
+    cyBtn.classList.remove('lang-active');cyBtn.setAttribute('aria-checked','false');
+    enBtn.classList.add('lang-active');enBtn.setAttribute('aria-checked','true');
+  }
+  document.documentElement.lang=currentLang;
+}
+document.getElementById('lang-en').addEventListener('click',()=>{if(currentLang==='en')return;currentLang='en';updateLangUI();renderSlide(current||startId);});
+document.getElementById('lang-cy').addEventListener('click',()=>{if(currentLang==='cy')return;currentLang='cy';updateLangUI();renderSlide(current||startId);});
+updateLangUI();
+renderSlide(startId);
+</script>
+</body>
+</html>

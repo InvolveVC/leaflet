@@ -66,7 +66,7 @@ a{color:var(--pink);text-decoration:underline;}
   <div class="lang-switcher" role="radiogroup" aria-label="Language">
     <button class="lang-pill lang-active" id="lang-en" type="button" role="radio" aria-checked="true"><span class="lang-code">GB</span><span class="lang-name">English</span></button>
     <button class="lang-pill" id="lang-cy" type="button" role="radio" aria-checked="false"><span class="lang-code">CY</span><span class="lang-name">Cymraeg</span></button>
-  </div>
+  </div> 
   <img src="https://emedia1.nhs.wales/HEIW2/cache/file/4D7D77BF-8CA3-4539-84477E0BBC2181EC.png" class="logo-top" alt="SQOD Logo">
   <div class="content" id="content"></div>
   <div class="footer-icons">
